@@ -1,7 +1,7 @@
-<apex:page controller="VacancyToApprove" action="{!onLoad}">
+<apex:page controller="VacancyToApprove" action="{!onLoad}" lightningStylesheets="true">
     <apex:pageMessages id="msg"/>
     <apex:form>
-        <apex:pageBlock Title="Vacancy Title">
+        <apex:pageBlock Title="Vacancy Title" id="block" >
             <apex:pageBlockSection Title="List of Available Vacancies">
                 <apex:dataTable value="{!VacancyToApprove}" var="v" cellpadding="4" border="1">
                     <apex:column>
@@ -14,8 +14,8 @@
                             <apex:actionSupport event="onclick" action="{!GetSelected}"/>
                         </apex:inputCheckbox>
                     </apex:column>
-                    <apex:column headervalue="Vacancy" value="{!v.vacCan.Vacancy__c}"/>
-                    <apex:column headervalue="Candidate" value="{!v.vacCan.Candidate__c}"/>
+                    <apex:column headervalue="Vacancy" value="{!v.vacancyCandidate.Vacancy__c}"/>
+                    <apex:column headervalue="Candidate" value="{!v.vacancyCandidate.Candidate__c}"/>
                 </apex:dataTable>
             </apex:pageBlockSection>
 
@@ -27,9 +27,9 @@
             </apex:pageBlockSection>
 
             <apex:pageBlockButtons>
-                <apex:commandButton action="{!approveCandidates}" value="Approve Vacancies" reRender="data,msg,block"/>
-                <apex:commandButton action="{!rejectCandidates}" value="Reject Vacancies" reRender="data,msg,block"/>
-                <apex:commandButton action="{!cancelVacancies}" value="Cancel Vacancies" reRender="data,msg,block"/>
+                <apex:commandButton action="{!approveCandidates}" value="Approve Vacancies" reRender="msg,block"/>
+                <apex:commandButton action="{!rejectCandidates}" value="Reject Vacancies" reRender="msg"/>
+                <apex:commandButton action="{!cancelVacancies}" value="Cancel Vacancies" reRender="msg"/>
             </apex:pageBlockButtons>
 
         </apex:pageBlock>
@@ -39,8 +39,10 @@
         function checkAll(cb) {
             var inputElem = document.getElementsByTagName("input");
             for (var i = 0; i < inputElem.length; i++) {
-                if (inputElem[i].id.indexOf("checkedone") !== -1)
-                    inputElem[i].checked = cb.checked;
+                if (inputElem[i].id) {
+                    if (inputElem[i].id.indexOf("checkedone") !== -1)
+                        inputElem[i].checked = cb.checked;
+                }
             }
         }
     </script>

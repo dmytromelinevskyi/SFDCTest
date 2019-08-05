@@ -2,10 +2,11 @@
  - Created by dmeli on 30.07.19.
  -->
 
-<apex:page id="ListOfCandidates" standardController="Vacancy__c" extensions="ListOfCandidates" action="{!onLoad}">
+<apex:page id="ListOfCandidates" standardController="Vacancy__c" extensions="ListOfCandidates" action="{!onLoad}"
+           lightningStylesheets="true">
     <apex:pageMessages id="msg"/>
     <apex:form>
-        <apex:pageBlock Title="Candidates" rendered="{!IF($Profile.Name =='Recruiter', true , false)}">
+        <apex:pageBlock Title="Candidates" rendered="{!$Profile.Name !='Recruiter'}">
             <apex:pageBlockSection Title="List of Available Candidates">
                 <apex:dataTable value="{!CandidatesToAdd}" var="c" cellpadding="4" border="1">
                     <apex:column>
@@ -19,9 +20,9 @@
                             <apex:actionSupport event="onclick" action="{!GetSelected}"/>
                         </apex:inputCheckbox>
                     </apex:column>
-                    <apex:column headervalue="Candidate" value="{!c.can.Name}"/>
-                    <apex:column headervalue="Candidate" value="{!c.can.FirstName__c}"/>
-                    <apex:column headervalue="Candidate Status" value="{!c.can.Status__c}"/>
+                    <apex:column headervalue="Candidate" value="{!c.candidate.Name}"/>
+                    <apex:column headervalue="Candidate" value="{!c.candidate.FirstName__c}"/>
+                    <apex:column headervalue="Candidate Status" value="{!c.candidate.Status__c}"/>
                 </apex:dataTable>
             </apex:pageBlockSection>
             <apex:pageBlockSection Title="Selected Candidates" id="Selected_PBS">
@@ -32,10 +33,10 @@
                 </apex:dataTable>
             </apex:pageBlockSection>
             <apex:pageBlockButtons>
-                <apex:commandButton action="{!addCandidates}" value="Add Candidates" reRender="data,msg,block"/>
+                <apex:commandButton action="{!addCandidates}" value="Add Candidates" reRender="msg"/>
             </apex:pageBlockButtons>
         </apex:pageBlock>
-        <apex:pageBlock Title="You do not have access" rendered="{!IF($Profile.Name !='Recruiter', true , false)}">
+        <apex:pageBlock Title="You do not have access" rendered="{!$Profile.Name !='Recruiter'}">
             You do not have access
         </apex:pageBlock>
     </apex:form>
@@ -43,8 +44,10 @@
         function checkAll(cb) {
             var inputElem = document.getElementsByTagName("input");
             for (var i = 0; i < inputElem.length; i++) {
-                if (inputElem[i].id.indexOf("checkedone") !== -1)
-                    inputElem[i].checked = cb.checked;
+                if (inputElem[i].id) {
+                    if (inputElem[i].id.indexOf("checkedone") !== -1)
+                        inputElem[i].checked = cb.checked;
+                }
             }
         }
     </script>
